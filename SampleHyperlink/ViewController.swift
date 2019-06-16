@@ -31,16 +31,16 @@ class ViewController: UIViewController {
         loginTermsTextsView.frame.origin.y = 100
         view.addSubview(loginTermsTextsView)
 
-        paragraphStyle.lineSpacing = 20
+        paragraphStyle.lineSpacing = 5
         paragraphStyle.alignment = .left
         attributes.updateValue(paragraphStyle, forKey: .paragraphStyle)
         attributedString = NSMutableAttributedString(string: termsTitle)
 
         attributedString.addAttribute(.link,
-                                      value: "https://www.yahoo.com/",
+                                      value: "https://www.yahoo.co.jp",
                                       range: NSString(string: termsTitle).range(of: "Yahoo"))
         attributedString.addAttribute(.link,
-                                      value: "https://www.google.com/",
+                                      value: "https://www.google.com",
                                       range: NSString(string: termsTitle).range(of: "Google"))
         
         // 行間とハイパーリンクを同時に実施する方法
