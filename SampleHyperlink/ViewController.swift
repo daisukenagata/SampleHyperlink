@@ -18,15 +18,16 @@ class ViewController: UIViewController {
     var attributes       : [NSAttributedString.Key: Any] = [:]
     let paragraphStyle   = NSMutableParagraphStyle()
     var attributedString = NSMutableAttributedString()
-    let termsTitle  = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
+    let termsTitle       = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loginTermsTextsView.isEditable = false
         loginTermsTextsView.delegate = self
+        loginTermsTextsView.isEditable = false
         loginTermsTextsView.isSelectable = true
         loginTermsTextsView.frame = self.view.frame
+
         loginTermsTextsView.frame.origin.y = 100
         view.addSubview(loginTermsTextsView)
 
@@ -34,15 +35,18 @@ class ViewController: UIViewController {
         paragraphStyle.alignment = .left
         attributes.updateValue(paragraphStyle, forKey: .paragraphStyle)
         attributedString = NSMutableAttributedString(string: termsTitle)
+
         attributedString.addAttribute(.link,
-                                      value: "TermLink",
+                                      value: "https://www.yahoo.com/",
                                       range: NSString(string: termsTitle).range(of: "Yahoo"))
         attributedString.addAttribute(.link,
-                                      value: "ConsentLink",
+                                      value: "https://www.google.com/",
                                       range: NSString(string: termsTitle).range(of: "Google"))
         
+        // 行間とハイパーリンクを同時に実施する方法
         let allLink  = NSString(string: termsTitle).range(of: termsTitle)
         attributedString.addAttributes(attributes, range: allLink)
+
         loginTermsTextsView.attributedText = attributedString
         loginTermsTextsView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)]
         
@@ -56,32 +60,11 @@ extension ViewController: UITextViewDelegate {
     
     public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
 
-        let urlString = URL.absoluteString
-        if  urlString == "TermLink" { termOfUseLink() }
-        if  urlString == "ConsentLink" { privacyPolicyLink() }
+        guard  URL.absoluteString == "" else {
+            if UIApplication.shared.canOpenURL(URL) { UIApplication.shared.open(URL) }
+            return false
+        }
         return false
-    }
-
-    func termOfUseLink() {
-        let  url = URL(string: "https://www.yahoo.co.jp")!
-        if UIApplication.shared.canOpenURL(url) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
-    }
-
-    func privacyPolicyLink() {
-        let  url = URL(string: "https://www.google.com/?client=safari")!
-        if UIApplication.shared.canOpenURL(url) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url)
-            } else {
-                // Fallback on earlier versions
-            }
-        }
     }
 }
 
