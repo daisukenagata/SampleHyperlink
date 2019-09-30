@@ -10,18 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    lazy var loginTermsTextsView: LoginTermsTextView = {
-        let lv = LoginTermsTextView()
-        return lv
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loginTermsTextsView.termsTitle = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
-        loginTermsTextsView.desgin()
-        loginTermsTextsView.atribute()
-        loginTermsTextsView.frame.origin.y = 100
+        let loginTermsTextsView = LoginTermsTextView()
         view.addSubview(loginTermsTextsView)
     }
 }
@@ -30,7 +22,7 @@ class ViewController: UIViewController {
 
 class LoginTermsTextView: UITextView {
 
-    var termsTitle       = ""
+    var termsTitle       = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
     var attributes       : [NSAttributedString.Key: Any] = [:]
     let paragraphStyle   = NSMutableParagraphStyle()
     var attributedString = NSMutableAttributedString()
@@ -53,6 +45,7 @@ class LoginTermsTextView: UITextView {
         self.isEditable = false
         self.isSelectable = true
         self.frame = UIScreen.main.bounds
+        self.frame.origin.y = 100
     }
 
     func atribute() {
