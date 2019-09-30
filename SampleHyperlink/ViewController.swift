@@ -10,27 +10,52 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var loginTermsTextsView: LoginTermsTextView = {
+    lazy var loginTermsTextsView: LoginTermsTextView = {
         let lv = LoginTermsTextView()
         return lv
     }()
 
-    var attributes       : [NSAttributedString.Key: Any] = [:]
-    let paragraphStyle   = NSMutableParagraphStyle()
-    var attributedString = NSMutableAttributedString()
-    let termsTitle       = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loginTermsTextsView.delegate = self
-        loginTermsTextsView.isEditable = false
-        loginTermsTextsView.isSelectable = true
-        loginTermsTextsView.frame = self.view.frame
-
+        loginTermsTextsView.termsTitle = "This app is developed as an individual. Supported OS is iOS. (Yahoo) The information to collect apps using True Depth API is the collection of eye movement information. The purpose of collecting information is eye movement for screen operation.(Google) Collected data is not shared or stored with third parties."
+        loginTermsTextsView.desgin()
+        loginTermsTextsView.atribute()
         loginTermsTextsView.frame.origin.y = 100
         view.addSubview(loginTermsTextsView)
+    }
+}
 
+// MARK: - Event
+
+class LoginTermsTextView: UITextView {
+
+    var termsTitle       = ""
+    var attributes       : [NSAttributedString.Key: Any] = [:]
+    let paragraphStyle   = NSMutableParagraphStyle()
+    var attributedString = NSMutableAttributedString()
+
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame,textContainer: textContainer)
+
+        self.delegate = self
+        desgin()
+        atribute()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    func desgin() {
+        self.sizeToFit()
+        self.font = UIFont.systemFont(ofSize: 14)
+        self.isEditable = false
+        self.isSelectable = true
+        self.frame = UIScreen.main.bounds
+    }
+
+    func atribute() {
         paragraphStyle.lineSpacing = 5
         paragraphStyle.alignment = .left
         attributes.updateValue(paragraphStyle, forKey: .paragraphStyle)
@@ -42,43 +67,22 @@ class ViewController: UIViewController {
         attributedString.addAttribute(.link,
                                       value: "https://www.google.com",
                                       range: NSString(string: termsTitle).range(of: "Google"))
-        
+
         // 行間とハイパーリンクを同時に実施する方法
         let allLink  = NSString(string: termsTitle).range(of: termsTitle)
         attributedString.addAttributes(attributes, range: allLink)
 
-        loginTermsTextsView.attributedText = attributedString
-        loginTermsTextsView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)]
-        
+        self.attributedText = attributedString
+        self.linkTextAttributes = [NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)]
     }
-
 }
 
-// MARK: - Event
-
-extension ViewController: UITextViewDelegate {
-    
+extension LoginTermsTextView: UITextViewDelegate {
     public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-
-        guard  URL.absoluteString == "" else {
-            if UIApplication.shared.canOpenURL(URL) { UIApplication.shared.open(URL) }
+        guard URL.absoluteString == "" else {
+            if UIApplication.shared.canOpenURL(URL) {UIApplication.shared.open(URL)}
             return false
         }
         return false
-    }
-}
-
-
-class LoginTermsTextView: UITextView {
-    
-    override init(frame: CGRect, textContainer: NSTextContainer?) {
-        super.init(frame: frame,textContainer: textContainer)
-        
-        self.sizeToFit()
-        self.font = UIFont.systemFont(ofSize: 14)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 }
